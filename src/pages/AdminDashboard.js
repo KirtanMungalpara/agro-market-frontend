@@ -67,6 +67,7 @@ const AdminDashboard = ({ token }) => {
     } catch { /* stats failed */ }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load().catch(() => {}); }, []);
 
   const deleteProduct = async (id) => {
