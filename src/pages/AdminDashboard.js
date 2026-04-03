@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { TranslationContext } from '../utils/translations';
+import socket from '../utils/socket';
 import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -67,14 +68,79 @@ const AdminDashboard = ({ token }) => {
     } catch { /* stats failed */ }
   };
 
-  useEffect(() => { load().catch(() => {}); }, []);
+  useEffect(() => {
+    load().catch(() => {});
+
+    // Admin doesn't join a personal room — listens to broadcast events only
+
+    // Live stats update (orders, revenue, users, products count)
+    const onStatsUpdate = (update) => {
+      setStats(prev => prev ? { ...prev, ...update } : update);
+    };
+
+    // New order placed anywhere on the platform
+    const onNewOrder = (order) => {
+      setOrders(prev => {
+        if (prev.find(o => o._id === order._id)) return prev;
+        return [order, ...prev];
+      });
+    };
+
+    // Order status changed
+    const onOrderStatusChanged = (updatedOrder) => {
+      setOrders(prev => prev.map(o => o._id === updatedOrder._id ? updatedOrder : o));
+    };
+
+    // Product added
+    const onProductAdded = (product) => {
+      setProducts(prev => {
+        if (prev.find(p => p._id === product._id)) return prev;
+        return [product, ...prev];
+      });
+    };
+
+    // Product updated (stock, price, etc.)
+    const onProductUpdated = (updatedProduct) => {
+      setProducts(prev => prev.map(p =>
+        p._id === updatedProduct._id ? { ...p, ...updatedProduct } : p
+      ));
+    };
+
+    // Product deleted
+    const onProductDeleted = ({ _id }) => {
+      setProducts(prev => prev.filter(p => p._id !== _id));
+    };
+
+    // User deleted
+    const onUserDeleted = ({ _id }) => {
+      setUsers(prev => prev.filter(u => u._id !== _id));
+    };
+
+    socket.on('stats_update', onStatsUpdate);
+    socket.on('new_order', onNewOrder);
+    socket.on('order_status_changed', onOrderStatusChanged);
+    socket.on('product_added', onProductAdded);
+    socket.on('product_updated', onProductUpdated);
+    socket.on('product_deleted', onProductDeleted);
+    socket.on('user_deleted', onUserDeleted);
+
+    return () => {
+      socket.off('stats_update', onStatsUpdate);
+      socket.off('new_order', onNewOrder);
+      socket.off('order_status_changed', onOrderStatusChanged);
+      socket.off('product_added', onProductAdded);
+      socket.off('product_updated', onProductUpdated);
+      socket.off('product_deleted', onProductDeleted);
+      socket.off('user_deleted', onUserDeleted);
+    };
+  }, []);
 
   const deleteProduct = async (id) => {
     setMsg('');
     try {
       await api.delete(`/products/${id}`, { headers });
       setMsg(strings.productDeleted);
-      await load();
+      // Socket 'product_deleted' event will remove it from state
     } catch (e) { setMsg(e.response?.data?.message || strings.failed); }
   };
 
