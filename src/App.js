@@ -114,9 +114,13 @@ const HomePage = () => {
 
       {/* ══ HERO ══════════════════════════════════════════════ */}
       <section className="hero-section">
-        <video className="hero-video" autoPlay loop muted playsInline>
-          <source src="https://videos.pexels.com/video-files/854142/854142-hd_1280_720_25fps.mp4" type="video/mp4" />
-        </video>
+        <div className="hero-slideshow">
+          <div className="hero-slide" style={{ backgroundImage: "url('/assets/wheat_sunset_1775248656092.png')" }}></div>
+          <div className="hero-slide" style={{ backgroundImage: "url('/assets/modern_farming_1775248687280.png')" }}></div>
+          <div className="hero-slide" style={{ backgroundImage: "url('/assets/soil_sprout_1775248670262.png')" }}></div>
+          <div className="hero-slide" style={{ backgroundImage: "url('/assets/lush_terraces_1775250561985.png')" }}></div>
+          <div className="hero-slide" style={{ backgroundImage: "url('/assets/auth_background_1775248798763.png')" }}></div>
+        </div>
         <div className="hero-overlay" />
 
         <div className={`hero-content ${visible ? 'hero-visible' : ''}`}>
