@@ -10,7 +10,7 @@ const ProductCard = ({ product, onOrder, showOrderControls, role }) => {
     <div className="product-card">
       <div className="product-image">
         {product.image
-          ? <img src={`${process.env.REACT_APP_API_URL}${product.image}`} alt={product.name} />
+          ? <img src={product.image.startsWith('http') ? product.image : `${process.env.REACT_APP_API_URL}${product.image}`} alt={product.name} />
           : <div className="image-placeholder">{strings.noImage}</div>}
       </div>
       <div className="product-body">

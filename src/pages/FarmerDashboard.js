@@ -208,7 +208,7 @@ const ProductList = ({ title, products, onDelete, strings }) => (
       {products.map(p => (
         <div key={p._id} className="product-card">
           <div className="product-image">
-            {p.image ? <img src={`${process.env.REACT_APP_API_URL}${p.image}`} alt={p.name} /> : <div className="image-placeholder">{strings.noImage}</div>}
+            {p.image ? <img src={p.image.startsWith('http') ? p.image : `${process.env.REACT_APP_API_URL}${p.image}`} alt={p.name} /> : <div className="image-placeholder">{strings.noImage}</div>}
           </div>
           <div className="product-body">
             <div className="product-title">
