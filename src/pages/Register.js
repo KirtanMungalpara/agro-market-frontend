@@ -37,9 +37,7 @@ const Register = () => {
 
   return (
     <div className="page-video-bg">
-      <video autoPlay loop muted playsInline>
-        <source src="https://videos.pexels.com/video-files/2818546/2818546-hd_1280_720_25fps.mp4" type="video/mp4" />
-      </video>
+      <div className="auth-bg-img"></div>
 
       <span className="auth-particle" />
       <span className="auth-particle" />

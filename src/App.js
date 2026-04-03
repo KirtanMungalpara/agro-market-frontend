@@ -179,6 +179,51 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* ══ KNOWLEDGE CENTER ═══════════════════════════════════ */}
+      <section className="knowledge-section" style={{ padding: '80px 20px', background: 'var(--bg-knowledge, #f8fafc)' }}>
+        <div className="section-header">
+          <div className="section-badge">{strings.knowledgeBadge || 'Insights'}</div>
+          <h2 className="section-title">{strings.knowledgeTitle || 'Agricultural Knowledge Center'}</h2>
+          <p className="section-sub">{strings.knowledgeSub || 'Latest practices and information for modern farming and sustainable growth.'}</p>
+        </div>
+        <div className="knowledge-grid">
+          
+          <div className="knowledge-card">
+            <div className="knowledge-img-wrap">
+              <img src="/assets/modern_farming_1775248687280.png" alt="Modern Farming" className="knowledge-img" />
+              <div className="knowledge-tag">Technology</div>
+            </div>
+            <div className="knowledge-body">
+              <h3 className="knowledge-title">Sustainable Agriculture & Tech</h3>
+              <p className="knowledge-desc">Modern farming integrates advanced technologies to improve yield while maintaining soil health and conserving critical water resources.</p>
+            </div>
+          </div>
+
+          <div className="knowledge-card">
+            <div className="knowledge-img-wrap">
+              <img src="/assets/soil_sprout_1775248670262.png" alt="Soil Health" className="knowledge-img" />
+              <div className="knowledge-tag">Environment</div>
+            </div>
+            <div className="knowledge-body">
+              <h3 className="knowledge-title">Soil Health & Nutrition</h3>
+              <p className="knowledge-desc">Healthy soil is the foundation of the food system. Organic practices and crop rotation ensure long-term viability and nutrient-rich crops.</p>
+            </div>
+          </div>
+
+          <div className="knowledge-card">
+            <div className="knowledge-img-wrap">
+              <img src="/assets/wheat_sunset_1775248656092.png" alt="Golden Harvest" className="knowledge-img" />
+              <div className="knowledge-tag">Best Practices</div>
+            </div>
+            <div className="knowledge-body">
+              <h3 className="knowledge-title">Maximizing Golden Harvests</h3>
+              <p className="knowledge-desc">Timing the harvest perfectly guarantees the highest quality produce, ensuring better prices in the market and reducing agricultural waste.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* ══ HOW IT WORKS ═════════════════════════════════════ */}
       <section className="how-section">
         <div className="how-bg-video">

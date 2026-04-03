@@ -40,10 +40,7 @@ const Login = ({ onAuth }) => {
 
   return (
     <div className="page-video-bg">
-      {/* Background video */}
-      <video autoPlay loop muted playsInline>
-        <source src="https://videos.pexels.com/video-files/3370063/3370063-hd_1280_720_25fps.mp4" type="video/mp4" />
-      </video>
+      <div className="auth-bg-img"></div>
 
       {/* Floating particles */}
       <span className="auth-particle" />
