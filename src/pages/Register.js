@@ -37,7 +37,7 @@ const Register = () => {
 
   return (
     <div className="page-video-bg">
-      <div className="auth-bg-img"></div>
+      <div className="auth-bg-img" style={{ backgroundImage: "url('/assets/auth_background_1775248798763.png')", backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}></div>
 
       <span className="auth-particle" />
       <span className="auth-particle" />

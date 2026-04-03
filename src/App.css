@@ -617,7 +617,6 @@
   object-fit: cover;
   filter: saturate(1.15) brightness(0.65);
   z-index: 0;
-  background: url('/assets/auth_background_1775248798763.png') center/cover no-repeat;
 }
 .page-video-bg video {
   display: none;
