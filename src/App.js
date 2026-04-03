@@ -174,8 +174,10 @@ const HomePage = () => {
         </div>
         <div className="features-grid">
           {features.map((f, i) => (
-            <div key={i} className="feature-card" style={{ animationDelay: `${i * 0.1}s` }}>
-              <div className="feature-icon">{f.icon}</div>
+            <div key={i} className="feature-card glow-hover" style={{ animationDelay: `${i * 0.1}s` }}>
+              <div className="feature-icon-wrapper">
+                <div className="feature-icon">{f.icon}</div>
+              </div>
               <h3 className="feature-title">{f.title}</h3>
               <p className="feature-desc">{f.desc}</p>
             </div>
@@ -243,15 +245,20 @@ const HomePage = () => {
             </div>
             <h2 className="section-title" style={{ color: '#fff' }}>{strings.howTitle}</h2>
           </div>
-          <div className="steps-grid">
-            {steps.map((s, i) => (
-              <div key={i} className="step-card">
-                <div className="step-number">{s.step}</div>
-                <div className="step-icon">{s.icon}</div>
-                <h3 className="step-title">{s.title}</h3>
-                <p className="step-desc">{s.desc}</p>
-              </div>
-            ))}
+          <div className="steps-wrapper">
+            <div className="steps-timeline-line"></div>
+            <div className="steps-grid">
+              {steps.map((s, i) => (
+                <div key={i} className="step-card glow-hover">
+                  <div className="step-number">{s.step}</div>
+                  <div className="step-icon-wrapper">
+                    <div className="step-icon">{s.icon}</div>
+                  </div>
+                  <h3 className="step-title">{s.title}</h3>
+                  <p className="step-desc">{s.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -263,7 +270,7 @@ const HomePage = () => {
           <h2 className="section-title">{strings.rolesTitle}</h2>
         </div>
         <div className="roles-grid">
-          <div className="role-card role-farmer">
+          <div className="role-card role-farmer glow-hover">
             <div className="role-img">
               <img src="https://images.pexels.com/photos/1382102/pexels-photo-1382102.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Farmer" />
               <div className="role-img-overlay" />
@@ -281,7 +288,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="role-card role-retailer">
+          <div className="role-card role-retailer glow-hover">
             <div className="role-img">
               <img src="https://images.pexels.com/photos/3962285/pexels-photo-3962285.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Retailer" />
               <div className="role-img-overlay" />
@@ -299,7 +306,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="role-card role-wholesale">
+          <div className="role-card role-wholesale glow-hover">
             <div className="role-img">
               <img src="https://images.pexels.com/photos/1267338/pexels-photo-1267338.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Wholesaler" />
               <div className="role-img-overlay" />
@@ -327,7 +334,7 @@ const HomePage = () => {
         </div>
         <div className="testimonials-grid">
           {testimonials.map((t, i) => (
-            <div key={i} className="testimonial-card">
+            <div key={i} className="testimonial-card glow-hover">
               <div className="testimonial-stars">⭐⭐⭐⭐⭐</div>
               <p className="testimonial-text">"{t.text}"</p>
               <div className="testimonial-author">
@@ -360,15 +367,62 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ══ FOOTER ═══════════════════════════════════════════ */}
-      <footer className="home-footer">
-        <div className="footer-brand">🌾 Agro Market</div>
-        <p className="footer-tagline">{strings.footerTagline}</p>
-        <div className="footer-links">
-          <a href="/login">{strings.login}</a>
-          <a href="/register">{strings.register}</a>
+      {/* ══ NEWSLETTER ═══════════════════════════════════════ */}
+      <section className="newsletter-section">
+        <div className="newsletter-content">
+          <div className="newsletter-icon">💌</div>
+          <h2 className="newsletter-title">Stay Updated with Agro Market</h2>
+          <p className="newsletter-sub">Get the latest market trends, tips, and price updates delivered directly to your inbox.</p>
+          <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
+            <input type="email" placeholder="Enter your email address" className="newsletter-input" required />
+            <button type="submit" className="hero-btn-primary newsletter-btn">Subscribe Now</button>
+          </form>
         </div>
-        <p className="footer-copy">{strings.footerCopy}</p>
+      </section>
+
+      {/* ══ PREMIUM FOOTER ═══════════════════════════════════ */}
+      <footer className="premium-footer">
+        <div className="footer-top">
+          <div className="footer-col brand-col">
+            <div className="footer-brand">
+              <span className="footer-logo-icon">🌾</span>
+              Agro Market
+            </div>
+            <p className="footer-desc">{strings.footerTagline || 'Empowering farmers with direct market access and real-time prices.'}</p>
+            <div className="social-links">
+              <a href="#/" aria-label="Facebook">🔵</a>
+              <a href="#/" aria-label="Twitter">🐦</a>
+              <a href="#/" aria-label="Instagram">📸</a>
+              <a href="#/" aria-label="LinkedIn">💼</a>
+            </div>
+          </div>
+          <div className="footer-col">
+            <h4 className="footer-heading">Platform</h4>
+            <a href="/register">Join as Farmer</a>
+            <a href="/register">Join as Retailer</a>
+            <a href="/register">Join as Wholesaler</a>
+            <a href="/login">Login to Dashboard</a>
+          </div>
+          <div className="footer-col">
+            <h4 className="footer-heading">Resources</h4>
+            <a href="#/">Knowledge Center</a>
+            <a href="#/">Market Prices</a>
+            <a href="#/">Help Center</a>
+            <a href="#/">Contact Us</a>
+          </div>
+          <div className="footer-col">
+            <h4 className="footer-heading">Legal</h4>
+            <a href="#/">Privacy Policy</a>
+            <a href="#/">Terms of Service</a>
+            <a href="#/">Cookie Policy</a>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p className="footer-copy">{strings.footerCopy || '© 2026 Agro Market. All rights reserved.'}</p>
+          <div className="footer-badges">
+             <span className="secure-badge">🔒 Secure Platform</span>
+          </div>
+        </div>
       </footer>
     </div>
   );
