@@ -40,64 +40,103 @@ const Register = () => {
       <video autoPlay loop muted playsInline>
         <source src="https://videos.pexels.com/video-files/2818546/2818546-hd_1280_720_25fps.mp4" type="video/mp4" />
       </video>
+
+      <span className="auth-particle" />
+      <span className="auth-particle" />
+      <span className="auth-particle" />
+      <span className="auth-particle" />
+      <span className="auth-particle" />
+
       <div className="layer">
-        <form className="card" onSubmit={submit}>
-          <h2 style={{ marginTop: 0 }}>{strings.register}</h2>
+        <div className="auth-split">
 
-          {error && <div className="out-stock" style={{ marginBottom: 12 }}>{error}</div>}
-
-          <div className="field">
-            <label>{strings.name}</label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              autoComplete="name"
-            />
+          {/* ── Left branding panel ── */}
+          <div className="auth-left">
+            <div className="auth-left-logo">
+              <div className="auth-left-logo-icon">🌾</div>
+              <span className="auth-left-logo-text">Agro Market</span>
+            </div>
+            <h1>
+              Join India's
+              <span>agri network.</span>
+            </h1>
+            <p>
+              Whether you're a farmer, wholesaler, retailer, or admin —
+              Agro Market gives you the tools to trade smarter and earn more.
+            </p>
+            <div className="auth-features">
+              <div className="auth-feature-pill"><span className="pill-icon">🌱</span> Farmers list inventory & seeds</div>
+              <div className="auth-feature-pill"><span className="pill-icon">🏪</span> Retailers buy at best retail prices</div>
+              <div className="auth-feature-pill"><span className="pill-icon">📦</span> Wholesalers get bulk wholesale rates</div>
+            </div>
           </div>
 
-          <div className="field">
-            <label>{strings.email}</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
+          {/* ── Right form card ── */}
+          <div className="auth-right">
+            <form className="card" onSubmit={submit}>
+              <h2 style={{ marginTop: 0 }}>{strings.register}</h2>
+              <p className="card-subtitle">Create your free account in seconds</p>
+
+              {error && <div className="out-stock" style={{ marginBottom: 14 }}>{error}</div>}
+
+              <div className="field">
+                <label>{strings.name}</label>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  autoComplete="name"
+                  placeholder="Your full name"
+                />
+              </div>
+
+              <div className="field">
+                <label>{strings.email}</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                />
+              </div>
+
+              <div className="field">
+                <label>{strings.password}</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="new-password"
+                  minLength={6}
+                  placeholder="At least 6 characters"
+                />
+              </div>
+
+              <div className="field">
+                <label>{strings.role}</label>
+                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                  <option value="farmer">🌾 {strings.farmer}</option>
+                  <option value="retailer">🏪 {strings.retailer}</option>
+                  <option value="wholesaler">📦 {strings.wholesaler}</option>
+                  <option value="admin">⚙️ {strings.admin}</option>
+                </select>
+              </div>
+
+              <button className="btn-primary" type="submit" style={{ width: '100%', marginTop: 8 }} disabled={loading}>
+                {loading ? '⏳ Creating account…' : `✨ ${strings.register}`}
+              </button>
+
+              <p style={{ textAlign: 'center', marginTop: 18, fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>
+                {strings.alreadyHaveAccount || 'Already have an account?'}{' '}
+                <Link to="/login" style={{ color: '#4ade80', fontWeight: 600 }}>{strings.login}</Link>
+              </p>
+            </form>
           </div>
 
-          <div className="field">
-            <label>{strings.password}</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="new-password"
-              minLength={6}
-            />
-          </div>
-
-          <div className="field">
-            <label>{strings.role}</label>
-            <select value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="farmer">{strings.farmer}</option>
-              <option value="retailer">{strings.retailer}</option>
-              <option value="wholesaler">{strings.wholesaler}</option>
-              <option value="admin">{strings.admin}</option>
-            </select>
-          </div>
-
-          <button className="btn-primary" type="submit" style={{ width: '100%' }} disabled={loading}>
-            {loading ? '⏳ …' : strings.register}
-          </button>
-
-          <p style={{ textAlign: 'center', marginTop: 14, fontSize: 14, opacity: 0.75 }}>
-            {strings.alreadyHaveAccount || 'Already have an account?'}{' '}
-            <Link to="/login" style={{ color: '#4ade80' }}>{strings.login}</Link>
-          </p>
-        </form>
+        </div>
       </div>
     </div>
   );

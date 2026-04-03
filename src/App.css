@@ -597,59 +597,392 @@
 .btn-secondary:hover { background: rgba(148,163,184,0.24); }
 
 /* ══════════════════════════════════════════════════════════
-   AUTH PAGES
+   AUTH PAGES  — Split-screen immersive design
    ══════════════════════════════════════════════════════════ */
+
+/* ── Outer wrapper ── */
 .page-video-bg {
   position: relative;
   min-height: calc(100vh - 60px);
   overflow: hidden;
+  display: flex;
 }
 
+/* ── Background video (full bleed) ── */
 .page-video-bg video {
   position: absolute;
   inset: 0;
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  filter: saturate(1.15) brightness(0.55);
+  z-index: 0;
 }
 
+/* ── Gradient overlay on top of video ── */
+.page-video-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(135deg,
+      rgba(2, 6, 23, 0.88) 0%,
+      rgba(5, 25, 10, 0.7) 50%,
+      rgba(2, 6, 23, 0.55) 100%);
+}
+
+/* ── Decorative animated orbs ── */
+.page-video-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 60%, rgba(74,222,128,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 500px at 80% 20%, rgba(96,165,250,0.06) 0%, transparent 70%);
+  animation: orb-drift 12s ease-in-out infinite alternate;
+}
+
+@keyframes orb-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(20px, -15px) scale(1.05); }
+}
+
+/* ── Center layer (holds the split layout) ── */
 .page-video-bg .layer {
   position: relative;
-  z-index: 1;
+  z-index: 3;
+  width: 100%;
   min-height: calc(100vh - 60px);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+/* ══ SPLIT LAYOUT ════════════════════════════════════════ */
+.auth-split {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: center;
+  padding: 40px 24px;
+  gap: 60px;
+}
+
+/* ── Left panel: branding / info ── */
+.auth-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+  animation: auth-slide-left 0.7s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes auth-slide-left {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.auth-left-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.auth-left-logo-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(74,222,128,0.15);
+  border: 1px solid rgba(74,222,128,0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 16px;
-  background: rgba(2,6,23,0.6);
+  font-size: 26px;
 }
 
+.auth-left-logo-text {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #fff;
+}
+
+.auth-left h1 {
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin: 0 0 16px;
+  color: #fff;
+}
+
+.auth-left h1 span {
+  color: #4ade80;
+  display: block;
+}
+
+.auth-left p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.65);
+  margin: 0 0 36px;
+  max-width: 420px;
+}
+
+/* Feature pills */
+.auth-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+  backdrop-filter: blur(8px);
+  width: fit-content;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.auth-feature-pill:hover {
+  background: rgba(74,222,128,0.1);
+  border-color: rgba(74,222,128,0.3);
+}
+
+.auth-feature-pill .pill-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* ── Right panel: the form card ── */
+.auth-right {
+  flex-shrink: 0;
+  width: min(420px, 100%);
+  animation: auth-slide-right 0.7s cubic-bezier(0.22,1,0.36,1) both;
+  animation-delay: 0.1s;
+}
+
+@keyframes auth-slide-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── The glass card itself ── */
 .card {
-  width: min(440px, 100%);
-  padding: 22px;
-  border-radius: 16px;
-  border: 1px solid rgba(148,163,184,0.25);
-  background: rgba(15,23,42,0.7);
-  backdrop-filter: blur(12px);
+  width: 100%;
+  padding: 36px 32px;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.13);
+  background: rgba(8, 18, 40, 0.72);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 0 0 1px rgba(74,222,128,0.08) inset,
+    0 32px 80px rgba(0,0,0,0.5),
+    0 0 60px rgba(74,222,128,0.04);
+  position: relative;
+  overflow: hidden;
 }
 
-.light .card { background: rgba(255,255,255,0.9); }
+/* Green glow strip at top of card */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(74,222,128,0.6), transparent);
+  border-radius: 0 0 50% 50%;
+}
 
-.field { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
-.field label { font-size: 13px; opacity: 0.8; }
+.light .card {
+  background: rgba(255,255,255,0.88);
+  border-color: rgba(0,0,0,0.1);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.04) inset;
+}
+
+/* Card heading */
+.card h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 6px;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+.light .card h2 { color: #0f172a; }
+
+/* Subtitle under heading */
+.card-subtitle {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  margin: 0 0 24px;
+}
+
+.light .card-subtitle { color: #64748b; }
+
+/* ── Form fields ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 14px 0;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+}
+
+.light .field label { color: #64748b; }
 
 .field input,
 .field select,
 .field textarea {
-  padding: 10px 12px;
+  padding: 11px 14px;
   border-radius: 12px;
-  border: 1px solid rgba(148,163,184,0.3);
-  background: transparent;
+  border: 1px solid rgba(148,163,184,0.2);
+  background: rgba(255,255,255,0.05);
   color: inherit;
   font-size: 14px;
   width: 100%;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: rgba(74,222,128,0.55);
+  background: rgba(74,222,128,0.05);
+  box-shadow: 0 0 0 3px rgba(74,222,128,0.12);
+}
+
+.light .field input,
+.light .field select,
+.light .field textarea {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.15);
+}
+
+.light .field input:focus,
+.light .field select:focus,
+.light .field textarea:focus {
+  border-color: #4ade80;
+  background: rgba(74,222,128,0.05);
+  box-shadow: 0 0 0 3px rgba(74,222,128,0.15);
 }
 
 .field textarea { min-height: 80px; resize: vertical; }
+
+/* ── Submit button override for auth pages ── */
+.card .btn-primary[type="submit"],
+.card button[type="submit"].btn-primary {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 18px;
+  border-radius: 12px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 24px rgba(34,197,94,0.3);
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.card .btn-primary[type="submit"]:hover:not(:disabled),
+.card button[type="submit"].btn-primary:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(34,197,94,0.4);
+}
+
+.card .btn-primary[type="submit"]:disabled,
+.card button[type="submit"].btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Divider line in card ── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: rgba(255,255,255,0.3);
+  font-size: 12px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+}
+
+/* ── Mobile: hide left panel, stack card full width ── */
+@media (max-width: 768px) {
+  .auth-split {
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+    gap: 0;
+  }
+
+  .auth-left {
+    display: none; /* hide on mobile – keeps it clean */
+  }
+
+  .auth-right {
+    width: 100%;
+    max-width: 440px;
+  }
+
+  .card {
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+}
+
+/* Floating particles (pure CSS) */
+@keyframes float-particle {
+  0%   { transform: translateY(0)   translateX(0)   scale(1);   opacity: 0.6; }
+  33%  { transform: translateY(-30px) translateX(12px) scale(1.1); opacity: 0.9; }
+  66%  { transform: translateY(-15px) translateX(-8px) scale(0.9); opacity: 0.5; }
+  100% { transform: translateY(-50px) translateX(4px)  scale(1);   opacity: 0; }
+}
+
+.auth-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(74,222,128,0.5);
+  pointer-events: none;
+  z-index: 2;
+  animation: float-particle 6s ease-in-out infinite;
+}
+
+.auth-particle:nth-child(1) { left: 15%; top: 70%; animation-delay: 0s;   width: 4px;  height: 4px; }
+.auth-particle:nth-child(2) { left: 30%; top: 80%; animation-delay: 1.5s; width: 6px;  height: 6px; }
+.auth-particle:nth-child(3) { left: 55%; top: 75%; animation-delay: 0.8s; width: 3px;  height: 3px; background: rgba(96,165,250,0.5); }
+.auth-particle:nth-child(4) { left: 75%; top: 85%; animation-delay: 2.2s; width: 5px;  height: 5px; }
+.auth-particle:nth-child(5) { left: 88%; top: 60%; animation-delay: 3.1s; width: 4px;  height: 4px; background: rgba(245,158,11,0.4); }
 
 /* ══════════════════════════════════════════════════════════
    DASHBOARD GRID
