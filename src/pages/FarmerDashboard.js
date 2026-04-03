@@ -78,10 +78,10 @@ const FarmerDashboard = ({ token, user }) => {
   };
 
   const items = [
+    { id: 'revenue',   label: `💰 ${strings.revenue}`   },
     { id: 'inventory', label: `📦 ${strings.inventory}` },
     { id: 'seeds',     label: `🌱 ${strings.seeds}`     },
     { id: 'orders',    label: `🛒 ${strings.orders}`    },
-    { id: 'revenue',   label: `💰 ${strings.revenue}`   },
     { id: 'add',       label: `➕ ${strings.addEdit}`   },
   ];
 
