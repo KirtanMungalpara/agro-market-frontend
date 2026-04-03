@@ -62,7 +62,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/products`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/products`) ;
         if (!res.ok) return;
         const products = await res.json();
         const inStock = products.filter(p => p.quantity > 0);
