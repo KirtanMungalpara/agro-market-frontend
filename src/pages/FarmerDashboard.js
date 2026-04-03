@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState, useCallback } from 'react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import { TranslationContext } from '../utils/translations';
@@ -47,16 +47,16 @@ const FarmerDashboard = ({ token, user }) => {
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
 
-  const load = async () => {
-    const [p, o] = await Promise.all([
-      api.get('/products/farmer/me', { headers }),
-      api.get(`/orders/farmer/${user.id}`, { headers }),
-    ]);
-    setProducts(p.data);
-    setOrders(o.data);
-  };
+  const load = useCallback(async () => {
+  const [p, o] = await Promise.all([
+    api.get('/products/farmer/me', { headers }),
+    api.get(`/orders/farmer/${user.id}`, { headers }),
+  ]);
+  setProducts(p.data);
+  setOrders(o.data);
+}, [headers, user.id]);
 
-  useEffect(() => { load().catch(() => {}); }, []);
+  useEffect(() => { load().catch(() => {}); }, [load]);
 
   const createOrUpdateProduct = async (form, id) => {
     setMsg('');
@@ -208,7 +208,7 @@ const ProductList = ({ title, products, onDelete, strings }) => (
       {products.map(p => (
         <div key={p._id} className="product-card">
           <div className="product-image">
-            {p.image ? <img src={`http://localhost:5000${p.image}`} alt={p.name} /> : <div className="image-placeholder">{strings.noImage}</div>}
+            {p.image ? <img src={`${process.env.REACT_APP_API_URL}${p.image}`} alt={p.name} /> : <div className="image-placeholder">{strings.noImage}</div>}
           </div>
           <div className="product-body">
             <div className="product-title">

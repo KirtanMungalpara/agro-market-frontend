@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState, useCallback } from 'react';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import Sidebar from '../components/Sidebar';
@@ -21,7 +21,7 @@ const WholesalerDashboard = ({ token, user }) => {
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     const [p, o, pay] = await Promise.all([
       api.get('/products'),
       api.get(`/orders/buyer/${user.id}`, { headers }),
@@ -30,9 +30,9 @@ const WholesalerDashboard = ({ token, user }) => {
     setProducts(p.data);
     setOrders(o.data);
     setPayments(pay.data);
-  };
+  }, [headers, user?.id]);
 
-  useEffect(() => { load().catch(() => {}); }, []);
+  useEffect(() => { load().catch(() => {}); }, [load]);
 
   const placeOrder = async ({ productId, quantity, pricePerUnit }) => {
     setMsg('');
