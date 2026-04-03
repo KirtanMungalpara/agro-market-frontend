@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import { TranslationContext } from '../utils/translations';
-import socket from '../utils/socket';
 import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -45,7 +44,6 @@ const FarmerDashboard = ({ token, user }) => {
   const [products, setProducts] = useState([]);
   const [orders,   setOrders]   = useState([]);
   const [msg,      setMsg]      = useState('');
-  const [newOrderAlert, setNewOrderAlert] = useState(null);
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
 
@@ -58,43 +56,7 @@ const FarmerDashboard = ({ token, user }) => {
     setOrders(o.data);
   };
 
-  useEffect(() => {
-    load().catch(() => {});
-
-    // Join this farmer's personal room
-    socket.emit('join', user.id);
-
-    // New order placed by retailer/wholesaler
-    const onNewOrder = (order) => {
-      setOrders(prev => {
-        // Avoid duplicate if already exists
-        if (prev.find(o => o._id === order._id)) return prev;
-        return [order, ...prev];
-      });
-      setNewOrderAlert(`🛒 New order from ${order.buyer?.name || 'a buyer'} for ${order.product?.name || 'a product'}!`);
-      setTimeout(() => setNewOrderAlert(null), 5000);
-    };
-
-    // Order status updated (e.g. payment received — farmer can now deliver)
-    const onOrderStatusChanged = (updatedOrder) => {
-      setOrders(prev => prev.map(o => o._id === updatedOrder._id ? updatedOrder : o));
-    };
-
-    // Payment received — update order isPaid flag
-    const onPaymentReceived = ({ orderId, isPaid }) => {
-      setOrders(prev => prev.map(o => o._id === orderId ? { ...o, isPaid } : o));
-    };
-
-    socket.on('new_order', onNewOrder);
-    socket.on('order_status_changed', onOrderStatusChanged);
-    socket.on('payment_received', onPaymentReceived);
-
-    return () => {
-      socket.off('new_order', onNewOrder);
-      socket.off('order_status_changed', onOrderStatusChanged);
-      socket.off('payment_received', onPaymentReceived);
-    };
-  }, [user.id]);
+  useEffect(() => { load().catch(() => {}); }, []);
 
   const createOrUpdateProduct = async (form, id) => {
     setMsg('');
@@ -112,7 +74,7 @@ const FarmerDashboard = ({ token, user }) => {
 
   const setOrderStatus = async (id, status) => {
     await api.put(`/orders/${id}/status`, { status }, { headers });
-    // Socket will update state via 'order_status_changed' event
+    await load();
   };
 
   const items = [
@@ -149,14 +111,6 @@ const FarmerDashboard = ({ token, user }) => {
       <Sidebar items={items} active={active} setActive={setActive} />
       <div>
         <h2 style={{ marginTop:0 }}>{strings.farmerDashboard}</h2>
-
-        {/* Real-time new order alert banner */}
-        {newOrderAlert && (
-          <div className="stat" style={{ marginBottom:12, background:'rgba(74,222,128,0.15)', borderLeft:'4px solid #4ade80', padding:'12px 16px', borderRadius:8 }}>
-            {newOrderAlert}
-          </div>
-        )}
-
         {msg ? <div className="stat" style={{ marginBottom:12 }}>{msg}</div> : null}
 
         {active === 'inventory' && <ProductList title={strings.inventory} products={inventory} onDelete={del} strings={strings} />}
@@ -183,12 +137,12 @@ const RevenueSection = ({ revenue, strings }) => {
       <h3 style={{ marginTop:0 }}>💰 {strings.revenue}</h3>
       <div className="stat-row" style={{ marginBottom:24 }}>
         {[
-          [strings.totalOrders,        revenue.totalOrders,                             '#60a5fa'],
-          ['Pending',                  revenue.pending,                                 '#f59e0b'],
-          [strings.delivered,          revenue.delivered,                               '#4ade80'],
-          [strings.totalRevenue,       `₹${revenue.totalRevenue.toLocaleString()}`,     '#a78bfa'],
-          [`${strings.inventory} Rev`, `₹${revenue.invRevenue.toLocaleString()}`,       '#34d399'],
-          [`${strings.seeds} Rev`,     `₹${revenue.seedRevenue.toLocaleString()}`,      '#f87171'],
+          [strings.totalOrders,      revenue.totalOrders,               '#60a5fa'],
+          ['Pending',                revenue.pending,                   '#f59e0b'],
+          [strings.delivered,        revenue.delivered,                 '#4ade80'],
+          [strings.totalRevenue,     `₹${revenue.totalRevenue.toLocaleString()}`, '#a78bfa'],
+          [`${strings.inventory} Rev`, `₹${revenue.invRevenue.toLocaleString()}`, '#34d399'],
+          [`${strings.seeds} Rev`,     `₹${revenue.seedRevenue.toLocaleString()}`, '#f87171'],
         ].map(([label, val, color]) => (
           <div key={label} className="stat">
             <div className="muted" style={{ fontSize:12, marginBottom:4 }}>{label}</div>
@@ -254,9 +208,7 @@ const ProductList = ({ title, products, onDelete, strings }) => (
       {products.map(p => (
         <div key={p._id} className="product-card">
           <div className="product-image">
-            {p.image
-              ? <img src={`${process.env.REACT_APP_API_URL}${p.image}`} alt={p.name} />
-              : <div className="image-placeholder">{strings.noImage}</div>}
+            {p.image ? <img src={`http://localhost:5000${p.image}`} alt={p.name} /> : <div className="image-placeholder">{strings.noImage}</div>}
           </div>
           <div className="product-body">
             <div className="product-title">
