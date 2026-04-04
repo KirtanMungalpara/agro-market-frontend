@@ -478,7 +478,7 @@ const App = () => {
             <Route path="/retailer"   element={<ProtectedRoute roles={['retailer']}><RetailerDashboard   token={token} user={user} /></ProtectedRoute>} />
             <Route path="/wholesaler" element={<ProtectedRoute roles={['wholesaler']}><WholesalerDashboard token={token} user={user} /></ProtectedRoute>} />
             <Route path="/admin"      element={<ProtectedRoute roles={['admin']}><AdminDashboard       token={token} user={user} /></ProtectedRoute>} />
-            <Route path="/payment-success" element={<ProtectedRoute roles={['retailer', 'wholesaler']}><PaymentSuccess token={token} /></ProtectedRoute>} />
+            <Route path="/payment-success" element={<ProtectedRoute roles={['retailer', 'wholesaler']}><PaymentSuccess token={token} user={user} /></ProtectedRoute>} />
           </Routes>
         </div>
       </Router>

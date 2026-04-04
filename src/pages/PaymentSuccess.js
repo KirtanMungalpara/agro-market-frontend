@@ -6,7 +6,7 @@ import '../index.css'; // Assuming styling is there
 
 const api = axios.create({ baseURL: process.env.REACT_APP_API_URL });
 
-const PaymentSuccess = ({ token }) => {
+const PaymentSuccess = ({ token, user }) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { strings } = useContext(TranslationContext);
@@ -66,11 +66,11 @@ const PaymentSuccess = ({ token }) => {
         <div className="stat" style={{ backgroundColor: '#e6ffe6', color: '#006600', padding: '40px', borderRadius: '12px' }}>
           <h1 style={{ fontSize: '48px', margin: '0 0 20px 0' }}>✅</h1>
           <h2>{strings.paymentSuccess || 'Payment Successful!'}</h2>
-          <p>Your order has been paid securely via Stripe.</p>
+          <p>Your order has been paid securely via Razorpay.</p>
           <button 
             className="btn-primary" 
             style={{ marginTop: '20px' }}
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate(`/${user?.role || ''}`)}
           >
             Return to Dashboard
           </button>
@@ -85,7 +85,7 @@ const PaymentSuccess = ({ token }) => {
           <button 
             className="btn-secondary" 
             style={{ marginTop: '20px' }}
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate(`/${user?.role || ''}`)}
           >
             Return to Dashboard
           </button>
