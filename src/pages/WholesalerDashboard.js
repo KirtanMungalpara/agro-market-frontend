@@ -15,6 +15,7 @@ const WholesalerDashboard = ({ token, user }) => {
   const [msg,             setMsg]             = useState('');
   const [active,          setActive]          = useState('products');
   const [selectedPayment, setSelectedPayment] = useState(null);
+  const [payLoading,      setPayLoading]      = useState(false);
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
 
