@@ -77,14 +77,13 @@ const Navbar = ({ user, onLogout, darkMode, setDarkMode }) => {
           <span className="brand-text">Agro Market</span>
         </Link>
         
-        <div className="nav-center-links" style={{display: 'flex', gap: '30px', fontWeight: 600, fontSize: '15px'}}>
+        <div className="nav-center-links" style={{display: 'flex', gap: '30px', fontWeight: 600, fontSize: '15px', margin: '0 auto'}}>
           <Link to="/" style={{color: '#64748b', textDecoration: 'none'}}>Home</Link>
           <span style={{color: '#059669', borderBottom: '2px solid #059669', paddingBottom: '4px'}}>Market</span>
           <Link to={`/${user?.role || 'login'}`} style={{color: '#64748b', textDecoration: 'none'}}>Dashboard</Link>
-          <Link to="/mandi-rates" style={{color: '#64748b', textDecoration: 'none'}}>Mandi Rates</Link>
         </div>
 
-        <div className="nav-right">
+        <div className="nav-right" style={{marginLeft: 'auto', display: 'flex', gap: '15px', alignItems: 'center'}}>
           <div className="nav-pill">
             <span>🌐</span>
             <select value={language} onChange={(e) => setLanguage(e.target.value)} className="pill-select">
