@@ -53,28 +53,35 @@ const Navbar = ({ user, onLogout, darkMode, setDarkMode }) => {
 
   return (
     <>
+      <div className="ticker-wrap">
+        <div className="ticker-badge">
+          <span className="ticker-live-dot" />
+          <span className="ticker-live-text">LIVE</span>
+        </div>
+        <div className="ticker-window">
+          <div className="ticker-scroll">
+            {liveRates.map((r, i) => (
+              <span key={i} className="ticker-item">
+                <span className="ticker-crop">{r.crop}</span>
+                <span className="ticker-price">{r.price}</span>
+                <span className="ticker-sep">|</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <nav className="navbar">
         <Link to="/" className="brand">
           <span className="brand-icon">🌾</span>
           <span className="brand-text">Agro Market</span>
         </Link>
-
-        <div className="ticker-wrap">
-          <div className="ticker-badge">
-            <span className="ticker-live-dot" />
-            <span className="ticker-live-text">LIVE</span>
-          </div>
-          <div className="ticker-window">
-            <div className="ticker-scroll">
-              {liveRates.map((r, i) => (
-                <span key={i} className="ticker-item">
-                  <span className="ticker-crop">{r.crop}</span>
-                  <span className="ticker-price">{r.price}</span>
-                  <span className="ticker-sep">|</span>
-                </span>
-              ))}
-            </div>
-          </div>
+        
+        <div className="nav-center-links" style={{display: 'flex', gap: '30px', fontWeight: 600, fontSize: '15px'}}>
+          <Link to="/" style={{color: '#64748b', textDecoration: 'none'}}>Home</Link>
+          <span style={{color: '#059669', borderBottom: '2px solid #059669', paddingBottom: '4px'}}>Market</span>
+          <Link to={`/${user?.role || 'login'}`} style={{color: '#64748b', textDecoration: 'none'}}>Dashboard</Link>
+          <Link to="/mandi-rates" style={{color: '#64748b', textDecoration: 'none'}}>Mandi Rates</Link>
         </div>
 
         <div className="nav-right">

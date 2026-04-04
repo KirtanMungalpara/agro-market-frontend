@@ -8,6 +8,7 @@ import RetailerDashboard from './pages/RetailerDashboard';
 import WholesalerDashboard from './pages/WholesalerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import PaymentSuccess from './pages/PaymentSuccess';
+import MandiRates from './pages/MandiRates';
 import { TranslationContext, translations } from './utils/translations';
 import './App.css';
 
@@ -479,6 +480,7 @@ const App = () => {
             <Route path="/wholesaler" element={<ProtectedRoute roles={['wholesaler']}><WholesalerDashboard token={token} user={user} /></ProtectedRoute>} />
             <Route path="/admin"      element={<ProtectedRoute roles={['admin']}><AdminDashboard       token={token} user={user} /></ProtectedRoute>} />
             <Route path="/payment-success" element={<ProtectedRoute roles={['retailer', 'wholesaler']}><PaymentSuccess token={token} user={user} /></ProtectedRoute>} />
+            <Route path="/mandi-rates" element={<MandiRates />} />
           </Routes>
         </div>
       </Router>
