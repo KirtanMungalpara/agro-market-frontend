@@ -130,7 +130,7 @@ const WholesalerDashboard = ({ token, user }) => {
                     <td>{o.farmer?.name}</td>
                     <td>{o.quantity}</td>
                     <td>₹{o.totalPrice}</td>
-                    <td>{o.status}</td>
+                    <td><span className={"status-pill " + (o.status ? o.status.toLowerCase() : "")}>{o.status}</span></td>
                     <td>{o.isPaid ? strings.yes : strings.no}</td>
                     <td>
                       {o.isPaid ? (

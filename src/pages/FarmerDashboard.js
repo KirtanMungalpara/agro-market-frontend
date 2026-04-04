@@ -250,7 +250,7 @@ const OrdersTable = ({ orders, onAccept, onReject, onDeliver, strings }) => (
               <td>{o.product?.name || '—'}</td>
               <td>{o.quantity}</td>
               <td>₹{o.totalPrice}</td>
-              <td>{o.status}</td>
+              <td><span className={"status-pill " + (o.status ? o.status.toLowerCase() : "")}>{o.status}</span></td>
               <td>
                 {o.status === 'Pending' ? (
                   <span style={{ display:'flex', gap:6 }}>
