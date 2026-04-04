@@ -3,7 +3,6 @@ import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import Sidebar from '../components/Sidebar';
 import ReceiptModal from '../components/ReceiptModal';
-import QRPaymentModal from '../components/QRPaymentModal';
 import { TranslationContext } from '../utils/translations';
 
 const api = axios.create({ baseURL: process.env.REACT_APP_API_URL });
@@ -16,8 +15,6 @@ const RetailerDashboard = ({ token, user }) => {
   const [msg,             setMsg]             = useState('');
   const [active,          setActive]          = useState('products');
   const [selectedPayment, setSelectedPayment] = useState(null);
-  const [qrOrder,         setQrOrder]         = useState(null);
-  const [payLoading,      setPayLoading]      = useState(false);
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
 
@@ -43,19 +40,52 @@ const RetailerDashboard = ({ token, user }) => {
     } catch (e) { setMsg(e.response?.data?.message || strings.failed); }
   };
 
-  const openQR = (order) => { setMsg(''); setQrOrder(order); };
-
-  const confirmPay = async (orderId) => {
+  const handlePay = async (orderId) => {
     setPayLoading(true);
+    setMsg('');
     try {
-      await api.post(`/orders/${orderId}/pay`, {}, { headers });
-      setMsg(strings.paymentSuccess);
-      setQrOrder(null);
-      await load();
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      document.body.appendChild(script);
+
+      script.onload = async () => {
+        const response = await api.post(`/orders/${orderId}/create-razorpay-order`, {}, { headers });
+        const orderData = response.data;
+        
+        const options = {
+          key: orderData.keyId,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          name: "Agro Market",
+          description: "Order Payment",
+          order_id: orderData.id,
+          handler: function (res) {
+            window.location.href = `/payment-success?razorpay_payment_id=${res.razorpay_payment_id}&razorpay_order_id=${res.razorpay_order_id}&razorpay_signature=${res.razorpay_signature}&order_id=${orderId}`;
+          },
+          prefill: {
+            name: user.name || "Customer",
+          },
+          theme: {
+            color: "#059669",
+          },
+        };
+        
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.on('payment.failed', function (resp) {
+            setMsg(strings.paymentFailed || 'Payment Failed');
+        });
+        paymentObject.open();
+        setPayLoading(false);
+      };
+
+      script.onerror = () => {
+        setMsg("Razorpay SDK failed to load");
+        setPayLoading(false);
+      };
     } catch (e) {
       setMsg(e.response?.data?.message || strings.paymentFailed);
-      setQrOrder(null);
-    } finally { setPayLoading(false); }
+      setPayLoading(false);
+    } 
   };
 
   const items = [
@@ -72,7 +102,6 @@ const RetailerDashboard = ({ token, user }) => {
         {msg ? <div className="stat">{msg}</div> : null}
 
         <ReceiptModal open={!!selectedPayment} payment={selectedPayment} onClose={() => setSelectedPayment(null)} />
-        <QRPaymentModal open={!!qrOrder} order={qrOrder} onClose={() => setQrOrder(null)} onConfirm={confirmPay} loading={payLoading} />
 
         {active === 'products' && (
           <>
@@ -106,8 +135,8 @@ const RetailerDashboard = ({ token, user }) => {
                       {o.isPaid ? (
                         <span className="muted">{o.status === 'Delivered' ? strings.delivered : strings.paidLabel}</span>
                       ) : o.status === 'Accepted' ? (
-                        <button className="btn-primary" onClick={() => openQR(o)}>
-                          📱 {strings.pay}
+                        <button className="btn-primary" onClick={() => handlePay(o._id)} disabled={payLoading}>
+                          💳 {payLoading ? '⏳' : strings.pay}
                         </button>
                       ) : (
                         <div className="muted" style={{ fontSize: 12 }}>{strings.waitFarmer}</div>

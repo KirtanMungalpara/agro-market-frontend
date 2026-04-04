@@ -7,6 +7,7 @@ import FarmerDashboard from './pages/FarmerDashboard';
 import RetailerDashboard from './pages/RetailerDashboard';
 import WholesalerDashboard from './pages/WholesalerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import PaymentSuccess from './pages/PaymentSuccess';
 import { TranslationContext, translations } from './utils/translations';
 import './App.css';
 
@@ -477,6 +478,7 @@ const App = () => {
             <Route path="/retailer"   element={<ProtectedRoute roles={['retailer']}><RetailerDashboard   token={token} user={user} /></ProtectedRoute>} />
             <Route path="/wholesaler" element={<ProtectedRoute roles={['wholesaler']}><WholesalerDashboard token={token} user={user} /></ProtectedRoute>} />
             <Route path="/admin"      element={<ProtectedRoute roles={['admin']}><AdminDashboard       token={token} user={user} /></ProtectedRoute>} />
+            <Route path="/payment-success" element={<ProtectedRoute roles={['retailer', 'wholesaler']}><PaymentSuccess token={token} /></ProtectedRoute>} />
           </Routes>
         </div>
       </Router>
